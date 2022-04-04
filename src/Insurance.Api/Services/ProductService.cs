@@ -20,20 +20,20 @@ namespace Insurance.Api.Services
             _httpClient = new HttpClient { BaseAddress = new Uri(_configuration["ProductApi:URL"]) };
 
         }
-        public async Task<ProductTypeDto> GetProductType(int productID)
-        {
-            var result = await _httpClient.GetAsync(string.Format(_configuration["ProductApi:GetProduct"], productID));
-            var product = JsonConvert.DeserializeObject<ProductDto>(result.Content.ReadAsStringAsync().Result);
-            result= await _httpClient.GetAsync(string.Format(_configuration["ProductApi:GetProductType"], product.ProductTypeId));
+        public async Task<ProductTypeDto> GetProductType(ProductDto productDto)
+        {         
+            var result= await _httpClient.GetAsync(string.Format(_configuration["ProductApi:GetProductType"], productDto.ProductTypeId));
             var productType = JsonConvert.DeserializeObject<ProductTypeDto>(result.Content.ReadAsStringAsync().Result);
             return productType;
         }
 
-        public async Task<float> GetSalesPrice(int productID)
+        public async Task<ProductDto> GetProduct(int productID)
         {
             var result = await _httpClient.GetAsync(string.Format(_configuration["ProductApi:GetProduct"], productID));
-            var product = JsonConvert.DeserializeObject<ProductDto>(result.Content.ReadAsStringAsync().Result);
-            return product.SalesPrice;
+            var product = JsonConvert.DeserializeObject<ProductDto>(result.Content.ReadAsStringAsync().Result);     
+            return product;
         }
+
+     
     }
 }

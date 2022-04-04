@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Insurance.Api.Services.Interfaces
 {
-    public interface IProductService
+    public interface IInsuranceService
     {
-        public Task<ProductTypeDto> GetProductType(ProductDto productDto);
-        public Task<ProductDto> GetProduct(int productID);
+        public Insurance.Domain.Entities.Insurance CalculateInsurance(InsuranceDto insuranceDto);
 
     }
 }

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Insurance.Api.Services;
+using Insurance.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,6 +27,11 @@ namespace Insurance.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped<IInsuranceService, InsuranceService>();
+            services.AddScoped<IProductService, ProductService>();
+
             services.AddControllers();
         }
 
@@ -46,6 +53,8 @@ namespace Insurance.Api
             {
                 endpoints.MapControllers();
             });
+            app.UseWelcomePage();
+
         }
     }
 }
