@@ -30,6 +30,7 @@ namespace Insurance.Api
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IInsuranceService, InsuranceService>();
+            services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IProductService, ProductService>();
 
             services.AddControllers();

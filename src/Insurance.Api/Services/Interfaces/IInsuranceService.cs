@@ -8,7 +8,7 @@ namespace Insurance.Api.Services.Interfaces
 {
     public interface IInsuranceService
     {
-        public (List<Insurance.Domain.Entities.Insurance>, float) CalculateInsurance(List<InsuranceDto> insuranceDtoList);
+        public List<Insurance.Domain.Entities.Insurance> CalculateInsurance(List<InsuranceDto> insuranceDtoList);
 
     }
 }

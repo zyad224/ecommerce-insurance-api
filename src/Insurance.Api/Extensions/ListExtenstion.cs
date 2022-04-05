@@ -1,0 +1,39 @@
+﻿using AutoMapper;
+using Insurance.Api.Dtos;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Insurance.Api.Extensions
+{
+    public static class ListExtenstion
+    {
+        public static List<InsuranceDto> Merge( this List<ProductDto> productDtoList, List<ProductTypeDto> productTypeDtoList)
+        {
+            List<InsuranceDto> insuranceDtoList = new List<InsuranceDto>();
+
+
+            foreach (var productDto in productDtoList)
+            {
+                foreach (var productType in productTypeDtoList)
+                {
+                    if(productDto.ProductTypeId == productType.Id)
+                    {
+                        var insuranceDto = new InsuranceDto
+                        {
+                            ProductId = productDto.Id,
+                            ProductTypeName = productType.Name,
+                            ProductTypeHasInsurance = productType.CanBeInsured,
+                            SalesPrice = productDto.SalesPrice
+                        };
+
+                        insuranceDtoList.Add(insuranceDto);
+                    }
+                }
+            }
+
+            return insuranceDtoList;
+        }
+    }
+}

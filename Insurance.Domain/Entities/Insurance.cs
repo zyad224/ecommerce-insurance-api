@@ -15,8 +15,8 @@ namespace Insurance.Domain.Entities
         public int ProductId { get; private set; }
         public string ProductTypeName { get; private set; }
         public float InsuranceValue { get; private set; }
-        public float SalesPrice { get; set; }
-        public bool ProductTypeHasInsurance { get; set; }
+        public float SalesPrice { get; private set; }
+        public bool ProductTypeHasInsurance { get; private set; }
 
 
         private Insurance()
@@ -46,7 +46,7 @@ namespace Insurance.Domain.Entities
             {
 
                 if (this.SalesPrice < 500)
-                    this.InsuranceValue = 500;
+                    this.InsuranceValue = 0;
 
                 else if (this.SalesPrice >= 500 && this.SalesPrice < 2000)
                     this.InsuranceValue = 1000;
@@ -55,7 +55,8 @@ namespace Insurance.Domain.Entities
                 else if (this.SalesPrice >= 2000)
                     this.InsuranceValue = 2000;
 
-                else if ((this.ProductTypeName == "Laptops" ||
+
+                if ((this.ProductTypeName == "Laptops" ||
                           this.ProductTypeName == "Smartphones"))
                     this.InsuranceValue += 500;
 

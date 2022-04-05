@@ -19,12 +19,14 @@ namespace Insurance.Api.Controllers
 
         private readonly IProductService _productService;
         private readonly IInsuranceService _insuranceService;
+        private readonly IOrderService _orderService;
         private readonly IMapper _mapper;
 
-        public InsuranceController(IProductService productService, IInsuranceService insuranceService,IMapper mapper)
+        public InsuranceController(IProductService productService, IInsuranceService insuranceService, IOrderService orderService,IMapper mapper)
         {
             _productService = productService;
             _insuranceService = insuranceService;
+            _orderService = orderService;
             _mapper = mapper;
         }
 
@@ -39,7 +41,7 @@ namespace Insurance.Api.Controllers
             _mapper.Map<ProductTypeDto, InsuranceDto>(productTypeDto, insuranceDto);
 
             var insuranceDtoList = new List<InsuranceDto> { insuranceDto };   
-            (var insuranceList, var totalInsuranceValue) = _insuranceService.CalculateInsurance(insuranceDtoList);
+            var insuranceList = _insuranceService.CalculateInsurance(insuranceDtoList);
 
             _mapper.Map<Insurance.Domain.Entities.Insurance, InsuranceDto>(insuranceList.FirstOrDefault(), insuranceDto);
          
@@ -52,15 +54,15 @@ namespace Insurance.Api.Controllers
         {
             var productDtoList = await _productService.GetProducts(orderDtoReq.InsuranceDtoList.Select(idto => idto.ProductId));
             var productTypeDtoList = await _productService.GetProductTypes(productDtoList);
-            var insuranceDtoList = _mapper.MergeMap(productDtoList, productTypeDtoList);
+            var insuranceDtoList = productDtoList.Merge(productTypeDtoList);
 
-            (var insuranceList,var totalInsuranceValue) = _insuranceService.CalculateInsurance(insuranceDtoList);
+            var insuranceList = _insuranceService.CalculateInsurance(insuranceDtoList);
+            var order = _orderService.CreateOrder(insuranceList);
             _mapper.Map<List<Insurance.Domain.Entities.Insurance>, List<InsuranceDto>>(insuranceList, insuranceDtoList);
 
-            orderDtoReq.InsuranceDtoList = insuranceDtoList;
-            orderDtoReq.OrderInsuranceValue = totalInsuranceValue;
-            
-            return orderDtoReq;
+            var orderDto = new OrderDto { InsuranceDtoList = insuranceDtoList, OrderInsuranceValue = order.OrderInsuranceValue };
+                   
+            return orderDto;
         }
 
     }
