@@ -20,6 +20,10 @@ namespace Insurance.Api.Profiles
                    .ForMember(dest => dest.ProductTypeName, opt => opt.MapFrom(src => src.Name))
                    .ForMember(dest => dest.ProductTypeHasInsurance, opt => opt.MapFrom(src => src.CanBeInsured));
 
+            CreateMap<Insurance.Domain.Entities.Insurance, InsuranceDto>();
+
+
+
         }
 
     }

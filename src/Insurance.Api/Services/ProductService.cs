@@ -20,12 +20,7 @@ namespace Insurance.Api.Services
             _httpClient = new HttpClient { BaseAddress = new Uri(_configuration["ProductApi:URL"]) };
 
         }
-        public async Task<ProductTypeDto> GetProductType(ProductDto productDto)
-        {         
-            var result= await _httpClient.GetAsync(string.Format(_configuration["ProductApi:GetProductType"], productDto.ProductTypeId));
-            var productType = JsonConvert.DeserializeObject<ProductTypeDto>(result.Content.ReadAsStringAsync().Result);
-            return productType;
-        }
+      
 
         public async Task<ProductDto> GetProduct(int productID)
         {
@@ -34,6 +29,26 @@ namespace Insurance.Api.Services
             return product;
         }
 
-     
+        public async Task<List<ProductDto>> GetProducts(IEnumerable<int> productsIDS)
+        {
+            var result = await _httpClient.GetAsync(string.Format(_configuration["ProductApi:GetProducts"]));
+            var productList = JsonConvert.DeserializeObject<IEnumerable<ProductDto>>(result.Content.ReadAsStringAsync().Result);
+            var filteredProductDtoList = productList.Where(pdto => productsIDS.Any(productsIds => pdto.Id== productsIds)).ToList();
+            return filteredProductDtoList;
+        }
+        public async Task<ProductTypeDto> GetProductType(ProductDto productDto)
+        {
+            var result = await _httpClient.GetAsync(string.Format(_configuration["ProductApi:GetProductType"], productDto.ProductTypeId));
+            var productType = JsonConvert.DeserializeObject<ProductTypeDto>(result.Content.ReadAsStringAsync().Result);
+            return productType;
+        }
+
+        public async Task<List<ProductTypeDto>> GetProductTypes(IEnumerable<ProductDto> productDtoList)
+        {
+            var result = await _httpClient.GetAsync(string.Format(_configuration["ProductApi:GetProductTypes"]));
+            var productTypeList = JsonConvert.DeserializeObject<IEnumerable<ProductTypeDto>>(result.Content.ReadAsStringAsync().Result);
+            var filteredProductTypeList = productTypeList.Where(ptdto => productDtoList.Any(pdto => ptdto.Id == pdto.ProductTypeId)).ToList();
+            return filteredProductTypeList;
+        }
     }
 }

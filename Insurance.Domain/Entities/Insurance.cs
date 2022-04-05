@@ -16,6 +16,7 @@ namespace Insurance.Domain.Entities
         public string ProductTypeName { get; private set; }
         public float InsuranceValue { get; private set; }
         public float SalesPrice { get; set; }
+        public bool ProductTypeHasInsurance { get; set; }
 
 
         private Insurance()
@@ -23,35 +24,43 @@ namespace Insurance.Domain.Entities
 
         }
 
-        public Insurance(int productId,string productTypeName, float salesPrice)
+        public Insurance(int productId,string productTypeName, float salesPrice, bool productTypeHasInsurance)
         {
             if ((productId == 0) || (string.IsNullOrEmpty(productTypeName)) || (salesPrice == 0))
                 throw new InvalidInsuranceException("Invalid Insurance Parameters");
 
+            
             Id = UUIDGenerator.NewUUID();
             ProductId = productId;
             ProductTypeName = productTypeName;
             SalesPrice = salesPrice;
-
-        
+            ProductTypeHasInsurance = productTypeHasInsurance;
+            CreatedOn = DateTime.UtcNow;
+            ModifiedOn = DateTime.UtcNow;
+                           
         }
 
         public void SetInsuranceValue()
         {
+            if(this.ProductTypeHasInsurance)
+            {
 
-            if (this.SalesPrice < 500)
-                this.InsuranceValue = 500;
+                if (this.SalesPrice < 500)
+                    this.InsuranceValue = 500;
 
-            else if (this.SalesPrice >= 500 && this.SalesPrice < 2000)
-                this.InsuranceValue = 1000;
+                else if (this.SalesPrice >= 500 && this.SalesPrice < 2000)
+                    this.InsuranceValue = 1000;
 
 
-            else if (this.SalesPrice >= 2000)
-                this.InsuranceValue = 2000;
+                else if (this.SalesPrice >= 2000)
+                    this.InsuranceValue = 2000;
 
-            else if ((this.ProductTypeName == "Laptops" ||
-                      this.ProductTypeName == "Smartphones"))
-                this.InsuranceValue += 500;
+                else if ((this.ProductTypeName == "Laptops" ||
+                          this.ProductTypeName == "Smartphones"))
+                    this.InsuranceValue += 500;
+
+                ModifiedOn = DateTime.UtcNow;
+            }
 
         }
     }

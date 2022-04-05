@@ -8,8 +8,12 @@ namespace Insurance.Api.Services.Interfaces
 {
     public interface IProductService
     {
-        public Task<ProductTypeDto> GetProductType(ProductDto productDto);
         public Task<ProductDto> GetProduct(int productID);
+        public Task<ProductTypeDto> GetProductType(ProductDto productDto);
+        public Task<List<ProductDto>> GetProducts(IEnumerable<int> productsIDS);
+        public Task<List<ProductTypeDto>> GetProductTypes(IEnumerable<ProductDto> productDtoList);
+
+
 
     }
 }
