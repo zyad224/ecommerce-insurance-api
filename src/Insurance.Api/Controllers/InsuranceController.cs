@@ -1,29 +1,20 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using Insurance.Api.Dtos;
 using Insurance.Api.Extensions;
 using Insurance.Api.Services.Interfaces;
-using Insurance.Domain.DomainExceptions;
-using Insurance.Domain.Entities;
-using Insurance.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-
 namespace Insurance.Api.Controllers
 {
     [Route("api/insurance")]
     [ApiController]
     public class InsuranceController: Controller
     {
-
         private readonly IProductService _productService;
         private readonly IInsuranceService _insuranceService;
         private readonly IMapper _mapper;
-
         public InsuranceController(IProductService productService, IInsuranceService insuranceService,IMapper mapper)
         {
             _productService = productService;
@@ -35,7 +26,7 @@ namespace Insurance.Api.Controllers
         public async Task<ActionResult<InsuranceDto>> CalculateInsurance([FromBody] InsuranceDto insuranceDtoReq)
         {
             if ((insuranceDtoReq == null) || (insuranceDtoReq.ProductId == 0))
-                throw new InvalidInsuranceException("Invalid API Model");
+                return BadRequest("Invalid API Model");
 
             var productDto = await _productService.GetProduct(insuranceDtoReq.ProductId);
             var productTypeDto = await _productService.GetProductType(productDto);
@@ -54,8 +45,8 @@ namespace Insurance.Api.Controllers
         public async Task<ActionResult<OrderDto>> CalculateInsurance([FromBody] OrderDto orderDtoReq)
         {
             if ((orderDtoReq == null) || (!orderDtoReq.InsuranceDtoList.Any()))
-                throw new InvalidInsuranceException("Invalid API Model");
-            
+                return BadRequest("Invalid API Model");
+
             var productDtoList = await _productService.GetProducts(orderDtoReq.InsuranceDtoList.Select(idto => idto.ProductId));
             var productTypeDtoList = await _productService.GetProductTypes(productDtoList);
             var insuranceDtoList = productDtoList.Merge(productTypeDtoList);
@@ -74,7 +65,7 @@ namespace Insurance.Api.Controllers
         public async Task<ActionResult<List<SurchargeDto>>> Surcharges([FromBody] List<SurchargeDto> surchargeDtoReq)
         {
             if ((surchargeDtoReq == null) || (!surchargeDtoReq.Any()))
-                throw new InvalidSurchargeException("Invalid API Model");
+                return BadRequest("Invalid API Model");
 
             var surChargeList = _mapper.Map<List<Insurance.Domain.Entities.Surcharge>>(surchargeDtoReq);
             await _insuranceService.AddSurcharge(surChargeList);
@@ -85,7 +76,7 @@ namespace Insurance.Api.Controllers
         public async Task<ActionResult<List<SurchargeDto>>> Surcharges(int productTypeId, [FromBody] SurchargeDto surchargeDtoReq)
         {
             if ((surchargeDtoReq == null) || (productTypeId == 0))
-                throw new InvalidSurchargeException("Invalid API Model");
+                return BadRequest("Invalid API Model");
 
             await _insuranceService.UpdateSurcharge(surchargeDtoReq);
             return Ok();

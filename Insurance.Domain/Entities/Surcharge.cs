@@ -2,24 +2,14 @@
 using Insurance.Domain.DomainExceptions;
 using Insurance.Domain.Shared;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
-
 namespace Insurance.Domain.Entities
 {
     public class Surcharge:BaseEntity
-    {
-       
-        [Key]
+    {    
         public string Id { get; private set; }
         public float SurChargeFees { get; private set; }
         public int ProductTypeId { get; private set; }
-
-        [Timestamp] // sql server db 
-        public DateTime RowVersion { get; set; }
-
+        public byte[] RowVersion { get; set; }
         private Surcharge()
         {
 
@@ -38,10 +28,12 @@ namespace Insurance.Domain.Entities
         public void SetSurChargeFees(float surChargeFees)
         {
             this.SurChargeFees = surChargeFees;
+            ModifiedOn = DateTime.UtcNow;
         }
         public void SetProductTypeId(int productTypeId)
         {
             this.ProductTypeId = productTypeId;
+            ModifiedOn = DateTime.UtcNow;
         }
     }
 }

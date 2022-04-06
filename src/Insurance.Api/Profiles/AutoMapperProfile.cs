@@ -1,16 +1,10 @@
 ﻿using AutoMapper;
 using Insurance.Api.Dtos;
 using Insurance.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Insurance.Api.Profiles
 {
     public class AutoMapperProfile:Profile
     {
-
         public AutoMapperProfile()
         {
             CreateMap<ProductDto, InsuranceDto>()
@@ -28,9 +22,6 @@ namespace Insurance.Api.Profiles
                (x.ProductTypeId,
                 x.SurChargeFees
                ));
-
-
-
         }
 
     }

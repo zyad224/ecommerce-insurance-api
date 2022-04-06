@@ -2,16 +2,10 @@
 using Insurance.Domain.DomainExceptions;
 using Insurance.Domain.Shared;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
-
 namespace Insurance.Domain.Entities
 {
     public class Insurance: BaseEntity
     {
-        [Key]
         public string Id { get; private set; }
         public int ProductId { get; private set; }
         public int ProductTypeId { get; private set; }
@@ -19,13 +13,8 @@ namespace Insurance.Domain.Entities
         public float InsuranceValue { get; private set; }
         public float SalesPrice { get; private set; }
         public bool ProductTypeHasInsurance { get; private set; }
-
-        [NotMapped]
         public bool IsSurCharge { get; private set; }
-        [NotMapped]
         public float SurChargeFees { get; private set; }
-
-
         private Insurance()
         {
 
@@ -76,10 +65,12 @@ namespace Insurance.Domain.Entities
         public void SetIsSurCharge(bool isSurCharge)
         {
             this.IsSurCharge = isSurCharge;
+            ModifiedOn = DateTime.UtcNow;
         }
         public void SetSurChargeFees(float surChargeFees)
         {
             this.SurChargeFees = surChargeFees;
+            ModifiedOn = DateTime.UtcNow;
         }
     }
 }

@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 namespace Insurance.Api.Services
 {
     public class ProductService : IProductService

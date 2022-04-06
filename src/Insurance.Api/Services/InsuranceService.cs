@@ -3,11 +3,9 @@ using Insurance.Api.Services.Interfaces;
 using Insurance.Domain.DomainExceptions;
 using Insurance.Domain.Entities;
 using Insurance.Domain.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 namespace Insurance.Api.Services
 {
     public class InsuranceService : IInsuranceService

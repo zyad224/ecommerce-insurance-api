@@ -1,10 +1,5 @@
-﻿using AutoMapper;
-using Insurance.Api.Dtos;
-using System;
+﻿using Insurance.Api.Dtos;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Insurance.Api.Extensions
 {
     public static class ListExtenstion
