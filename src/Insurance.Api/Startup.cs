@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Insurance.Api.Logging;
 using Insurance.Api.Services;
 using Insurance.Api.Services.Interfaces;
 using Insurance.Domain.Interfaces;
@@ -31,6 +32,7 @@ namespace Insurance.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<ILog, LoggerNLog>();
             services.AddDbContext<DbApiContext>(opt => opt.UseInMemoryDatabase("InMemoryDb"));
             services.AddScoped<IDbApiContext>(provider => (IDbApiContext)provider.GetService(typeof(DbApiContext)));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -42,7 +44,7 @@ namespace Insurance.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILog logger)
         {
             if (env.IsDevelopment())
             {
@@ -55,7 +57,7 @@ namespace Insurance.Api
 
             app.UseAuthorization();
 
-            app.UseMiddleware<Insurance.Api.ExceptionHandlerMiddleware.ExceptionHandlerMiddleware>();
+            app.UseMiddleware<Insurance.Api.ExceptionHandlerMiddleware.ExceptionHandlerMiddleware>(logger);
 
             app.UseEndpoints(endpoints =>
             {

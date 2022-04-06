@@ -1,4 +1,5 @@
-﻿using Insurance.Domain.DomainExceptions;
+﻿using Insurance.Api.Logging;
+using Insurance.Domain.DomainExceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,10 +14,11 @@ namespace Insurance.Api.ExceptionHandlerMiddleware
     public class ExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
-
-        public ExceptionHandlerMiddleware(RequestDelegate next)
+        private readonly ILog _logger;
+        public ExceptionHandlerMiddleware(RequestDelegate next,ILog logger)
         {
             _next = next;
+            _logger = logger;
         }
         public async Task Invoke(HttpContext context)
         {
@@ -44,6 +46,7 @@ namespace Insurance.Api.ExceptionHandlerMiddleware
                 else
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
+                _logger.Error(error,error.Message);
                 var result = JsonSerializer.Serialize(new { message = error?.Message });
                 await response.WriteAsync(result);
             }
