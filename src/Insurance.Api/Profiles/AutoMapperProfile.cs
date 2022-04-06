@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Insurance.Api.Dtos;
+using Insurance.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,12 @@ namespace Insurance.Api.Profiles
                    .ForMember(dest => dest.ProductTypeHasInsurance, opt => opt.MapFrom(src => src.CanBeInsured));
 
             CreateMap<Insurance.Domain.Entities.Insurance, InsuranceDto>();
+
+            CreateMap<SurchargeDto, Surcharge>()
+               .ConstructUsing(x => new Surcharge
+               (x.ProductTypeId,
+                x.SurChargeFees
+               ));
 
 
 

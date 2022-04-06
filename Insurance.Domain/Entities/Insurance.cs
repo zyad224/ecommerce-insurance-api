@@ -4,6 +4,7 @@ using Insurance.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Insurance.Domain.Entities
@@ -13,25 +14,31 @@ namespace Insurance.Domain.Entities
         [Key]
         public string Id { get; private set; }
         public int ProductId { get; private set; }
+        public int ProductTypeId { get; private set; }
         public string ProductTypeName { get; private set; }
         public float InsuranceValue { get; private set; }
         public float SalesPrice { get; private set; }
         public bool ProductTypeHasInsurance { get; private set; }
+
+        [NotMapped]
+        public bool IsSurCharge { get; private set; }
+        [NotMapped]
+        public float SurChargeFees { get; private set; }
 
 
         private Insurance()
         {
 
         }
-
-        public Insurance(int productId,string productTypeName, float salesPrice, bool productTypeHasInsurance)
+        public Insurance(int productId,int productTypeId,string productTypeName, float salesPrice, bool productTypeHasInsurance)
         {
-            if ((productId == 0) || (string.IsNullOrEmpty(productTypeName)) || (salesPrice == 0))
+            if ((productId == 0) ||(productTypeId == 0) || (string.IsNullOrEmpty(productTypeName)) || (salesPrice == 0))
                 throw new InvalidInsuranceException("Invalid Insurance Parameters");
 
             
             Id = UUIDGenerator.NewUUID();
             ProductId = productId;
+            ProductTypeId = productTypeId;
             ProductTypeName = productTypeName;
             SalesPrice = salesPrice;
             ProductTypeHasInsurance = productTypeHasInsurance;
@@ -39,7 +46,6 @@ namespace Insurance.Domain.Entities
             ModifiedOn = DateTime.UtcNow;
                            
         }
-
         public void SetInsuranceValue()
         {
             if(this.ProductTypeHasInsurance)
@@ -57,12 +63,23 @@ namespace Insurance.Domain.Entities
 
 
                 if ((this.ProductTypeName == "Laptops" ||
-                          this.ProductTypeName == "Smartphones"))
-                    this.InsuranceValue += 500;
+                     this.ProductTypeName == "Smartphones"))
+                     this.InsuranceValue += 500;
+
+                if (this.IsSurCharge)
+                    this.InsuranceValue += this.SurChargeFees;
 
                 ModifiedOn = DateTime.UtcNow;
             }
 
+        }
+        public void SetIsSurCharge(bool isSurCharge)
+        {
+            this.IsSurCharge = isSurCharge;
+        }
+        public void SetSurChargeFees(float surChargeFees)
+        {
+            this.SurChargeFees = surChargeFees;
         }
     }
 }

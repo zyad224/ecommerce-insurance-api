@@ -18,11 +18,12 @@ namespace Insurance.Api.Extensions
             {
                 foreach (var productType in productTypeDtoList)
                 {
-                    if(productDto.ProductTypeId == productType.Id)
+                    if(productDto?.ProductTypeId == productType?.Id)
                     {
                         var insuranceDto = new InsuranceDto
                         {
                             ProductId = productDto.Id,
+                            ProductTypeId = productType.Id,
                             ProductTypeName = productType.Name,
                             ProductTypeHasInsurance = productType.CanBeInsured,
                             SalesPrice = productDto.SalesPrice

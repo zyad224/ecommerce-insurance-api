@@ -4,12 +4,11 @@ using System.Text;
 
 namespace Insurance.Domain.DomainExceptions
 {
-    public class InvalidInsuranceException:Exception
+    public class InvalidSurchargeException:Exception
     {
-        public InvalidInsuranceException(string message)
+        public InvalidSurchargeException(string message)
         : base(message)
         {
         }
-    
     }
 }

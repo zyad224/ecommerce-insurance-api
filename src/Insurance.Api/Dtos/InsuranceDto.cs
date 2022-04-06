@@ -11,6 +11,7 @@ namespace Insurance.Api.Dtos
     {
         [Required(ErrorMessage = "ProductId is Required")]
         public int ProductId { get; set; }
+        public int ProductTypeId { get; set; }
         public float InsuranceValue { get; set; }
         [JsonIgnore]
         public string ProductTypeName { get; set; }

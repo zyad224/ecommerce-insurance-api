@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Insurance.Domain.DomainExceptions
 {
-    public class InvalidOrderException: Exception
+    public class InvalidProductException:Exception
     {
-        public InvalidOrderException(string message)
+        public InvalidProductException(string message)
         : base(message)
         {
         }
