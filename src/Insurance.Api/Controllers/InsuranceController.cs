@@ -26,8 +26,8 @@ namespace Insurance.Api.Controllers
         /// The endpoint recieves OrderDto and calculates the insurance for each product in the list.
         /// </summary>
         /// <returns>The endpoint returns the list of InsuranceDto and the overall OrderInsuranceValue.</returns>
-        /// /// <response code="200"> OrderDto: It consists of List of InsuranceDto and OrderInsuranceValue </response>
-        /// <response code="400">Invalid Products API Endpoint Model</response>        
+        /// /// <response code="200"> Calculates Insurance for each product in InsuranceDtoList and Calculates the overall OrderInsuranceValue</response>
+        /// <response code="400">OrderDto submitted is NULL or the InsuranceDtoList is NULL/Empty</response>        
         [HttpPost]
         [Route("products")]
         public async Task<ActionResult<OrderDto>> CalculateInsurance([FromBody] OrderDto orderDtoReq)
@@ -49,7 +49,7 @@ namespace Insurance.Api.Controllers
         /// The endpoint recieves List of SurchargeDto and save them in the database.
         /// </summary>
         /// /// <response code="201"> Creates a new list of Surcharges in the database</response>
-        /// <response code="400">Invalid Surcharges API Endpoint Model</response>   
+        /// <response code="400">List of Surcharges submitted is NULL or Empty</response>   
         [HttpPost]
         [Route("surcharges")]
         public async Task<ActionResult<List<SurchargeDto>>> UploadSurcharges([FromBody] List<SurchargeDto> surchargeDtoReq)
@@ -66,7 +66,8 @@ namespace Insurance.Api.Controllers
         /// The endpoint uses the ProductTypeId and updates its corresponding Surcharge.
         /// </summary>
         /// /// <response code="204"> Updates an already existing Surcharge</response>
-        /// <response code="400">Invalid Surcharges API Endpoint Model</response>   
+        /// <response code="400">ShurchargeDto submitted is NULL or query id != SurchargeDto.ProductTypeId</response> 
+        /// <response code="404">Shurcharge with ProductTypeId submitted does not exist in database</response>
         [HttpPut]
         [Route("surcharges/{id}")]
         public async Task<ActionResult<List<SurchargeDto>>> UpdateSurcharge(int id, [FromBody] SurchargeDto surchargeDtoReq)
