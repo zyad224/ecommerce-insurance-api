@@ -34,16 +34,13 @@ namespace Insurance.Api.Controllers
         {
             if ((orderDtoReq == null) || (!orderDtoReq.IsValid()))
                 return BadRequest("Invalid /products API Endpoint Model");
-
             var productDtoList = await _productService.GetProducts(orderDtoReq.InsuranceDtoList.Select(idto => idto.ProductId));
             var productTypeDtoList = await _productService.GetProductTypes(productDtoList);
             var insuranceDtoList = productDtoList.Merge(productTypeDtoList);
-
             var insuranceList = await _insuranceService.CalculateInsurance(insuranceDtoList);
             var extraInsuranceFees = _insuranceService.ExtraInsuranceFees(insuranceList);
             var totalInsurance = _insuranceService.TotalInsurance(insuranceList,extraInsuranceFees,orderDtoReq.InsuranceDtoList);
             _mapper.Map<List<Insurance.Domain.Entities.Insurance>, List<InsuranceDto>>(insuranceList, insuranceDtoList);
-
             var orderDto = new OrderDto { InsuranceDtoList = insuranceDtoList, OrderInsuranceValue = totalInsurance };         
             return Ok(orderDto);
         }
@@ -59,7 +56,6 @@ namespace Insurance.Api.Controllers
         {
             if ((surchargeDtoReq == null) || (!surchargeDtoReq.Any()))
                 return BadRequest("Invalid /surcharges API Endpoint Model");
-
             var surChargeList = _mapper.Map<List<Insurance.Domain.Entities.Surcharge>>(surchargeDtoReq);
             await _insuranceService.AddSurcharge(surChargeList);
             return CreatedAtAction("Created", surchargeDtoReq);
@@ -77,7 +73,6 @@ namespace Insurance.Api.Controllers
         {
             if ((surchargeDtoReq == null) || (id != surchargeDtoReq.ProductTypeId))
                 return BadRequest("Invalid /surcharges/{id} API Model");
-
             await _insuranceService.UpdateSurcharge(surchargeDtoReq);
             return NoContent();
         }
