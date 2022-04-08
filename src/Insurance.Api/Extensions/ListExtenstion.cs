@@ -1,4 +1,5 @@
 ﻿using Insurance.Api.Dtos;
+using System;
 using System.Collections.Generic;
 namespace Insurance.Api.Extensions
 {
@@ -6,9 +7,10 @@ namespace Insurance.Api.Extensions
     {
         public static List<InsuranceDto> Merge( this List<ProductDto> productDtoList, List<ProductTypeDto> productTypeDtoList)
         {
+            if ((productDtoList == null) || (productTypeDtoList == null))
+                throw new ArgumentNullException("ProductDtoList or ProductTypeDtoList is NULL");
+
             List<InsuranceDto> insuranceDtoList = new List<InsuranceDto>();
-
-
             foreach (var productDto in productDtoList)
             {
                 foreach (var productType in productTypeDtoList)

@@ -23,6 +23,5 @@ namespace Insurance.Api.Profiles
                 x.SurChargeFees
                ));
         }
-
     }
 }

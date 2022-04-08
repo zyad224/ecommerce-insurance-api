@@ -6,7 +6,6 @@ namespace Insurance.Domain.DomainExceptions
         public InvalidInsuranceException(string message)
         : base(message)
         {
-        }
-    
+        }    
     }
 }

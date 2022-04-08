@@ -22,9 +22,8 @@ namespace Insurance.Domain.Entities
         public Insurance(int productId,int productTypeId,string productTypeName, float salesPrice, bool productTypeHasInsurance)
         {
             if ((productId == 0) ||(productTypeId == 0) || (string.IsNullOrEmpty(productTypeName)) || (salesPrice == 0))
-                throw new InvalidInsuranceException("Invalid Insurance Parameters");
-
-            
+                throw new InvalidInsuranceException("Invalid Insurance Domain Parameters");
+       
             Id = UUIDGenerator.NewUUID();
             ProductId = productId;
             ProductTypeId = productTypeId;
@@ -32,27 +31,23 @@ namespace Insurance.Domain.Entities
             SalesPrice = salesPrice;
             ProductTypeHasInsurance = productTypeHasInsurance;
             CreatedOn = DateTime.UtcNow;
-            ModifiedOn = DateTime.UtcNow;
-                           
+            ModifiedOn = DateTime.UtcNow;                      
         }
         public void SetInsuranceValue()
         {
             if(this.ProductTypeHasInsurance)
             {
-
                 if (this.SalesPrice < 500)
                     this.InsuranceValue = 0;
 
                 else if (this.SalesPrice >= 500 && this.SalesPrice < 2000)
                     this.InsuranceValue = 1000;
 
-
                 else if (this.SalesPrice >= 2000)
                     this.InsuranceValue = 2000;
 
-
-                if ((this.ProductTypeName == "Laptops" ||
-                     this.ProductTypeName == "Smartphones"))
+                if ((this.ProductTypeName == ProductTypeEnum.Laptops.GetString() ||
+                     this.ProductTypeName == ProductTypeEnum.Smartphones.GetString()))
                      this.InsuranceValue += 500;
 
                 if (this.IsSurCharge)

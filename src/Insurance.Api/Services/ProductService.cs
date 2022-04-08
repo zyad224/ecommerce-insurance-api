@@ -20,43 +20,25 @@ namespace Insurance.Api.Services
             _httpClient = new HttpClient { BaseAddress = new Uri(_configuration["ProductApi:URL"]) };
 
         }
-        public async Task<ProductDto> GetProduct(int productId)
-        {
-            if (productId == 0)
-                throw new InvalidProductException("Invalid ProductId");
-
-            var result = await _httpClient.GetAsync(string.Format(_configuration["ProductApi:GetProduct"], productId));
-            var product = JsonConvert.DeserializeObject<ProductDto>(result.Content.ReadAsStringAsync().Result);     
-            return product;
-        }
         public async Task<List<ProductDto>> GetProducts(IEnumerable<int> productsIds)
         {
-            if((productsIds == null) || (!productsIds.Any()))
+            if((productsIds == null) || (!productsIds.Any()) || productsIds.Any(p => p == 0))
                 throw new InvalidProductException("Invalid ProductId List");
 
             var result = await _httpClient.GetAsync(string.Format(_configuration["ProductApi:GetProducts"]));
-            var productList = JsonConvert.DeserializeObject<IEnumerable<ProductDto>>(result.Content.ReadAsStringAsync().Result);
-            var filteredProductDtoList = productList.Where(pdto => productsIds.Any(productsIds => pdto.Id== productsIds)).ToList();
+            var productDtoList = JsonConvert.DeserializeObject<IEnumerable<ProductDto>>(result.Content.ReadAsStringAsync().Result);
+            var filteredProductDtoList = productDtoList.Where(pdto => productsIds.Any(productsIds => pdto.Id== productsIds)).ToList();
             return filteredProductDtoList;
-        }
-        public async Task<ProductTypeDto> GetProductType(ProductDto productDto)
-        {
-            if (productDto == null)
-                throw new InvalidProductException("Invalid ProductDto");
-
-            var result = await _httpClient.GetAsync(string.Format(_configuration["ProductApi:GetProductType"], productDto.ProductTypeId));
-            var productType = JsonConvert.DeserializeObject<ProductTypeDto>(result.Content.ReadAsStringAsync().Result);
-            return productType;
         }
         public async Task<List<ProductTypeDto>> GetProductTypes(IEnumerable<ProductDto> productDtoList)
         {
-            if ((productDtoList == null) || (!productDtoList.Any()))
-                throw new InvalidProductException("Invalid ProductDtoList");
+            if ((productDtoList == null) || (!productDtoList.Any()) || productDtoList.Any(pdto => pdto.ProductTypeId == 0))
+                throw new InvalidProductException("Invalid ProductDto List");
 
             var result = await _httpClient.GetAsync(string.Format(_configuration["ProductApi:GetProductTypes"]));
-            var productTypeList = JsonConvert.DeserializeObject<IEnumerable<ProductTypeDto>>(result.Content.ReadAsStringAsync().Result);
-            var filteredProductTypeList = productTypeList.Where(ptdto => productDtoList.Any(pdto => ptdto.Id == pdto.ProductTypeId)).ToList();
-            return filteredProductTypeList;
+            var productTypeDtoList = JsonConvert.DeserializeObject<IEnumerable<ProductTypeDto>>(result.Content.ReadAsStringAsync().Result);
+            var filteredProductTypeDtoList = productTypeDtoList.Where(ptdto => productDtoList.Any(pdto => ptdto.Id == pdto.ProductTypeId)).ToList();
+            return filteredProductTypeDtoList;
         }
     }
 }

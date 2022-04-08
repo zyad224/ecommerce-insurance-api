@@ -6,6 +6,6 @@ namespace Insurance.Api.Dtos
         [Required(ErrorMessage = "SurChargeFees is Required")]
         public float SurChargeFees { get;  set; }
         [Required(ErrorMessage = "ProductTypeId is Required")]
-        public int ProductTypeId { get;  set; }
+        public int ProductTypeId { get;  set; }    
     }
 }

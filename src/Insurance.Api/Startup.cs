@@ -2,6 +2,7 @@ using System;
 using Insurance.Api.Logging;
 using Insurance.Api.Services;
 using Insurance.Api.Services.Interfaces;
+using Insurance.Api.Utilities;
 using Insurance.Domain.Interfaces;
 using Insurance.Infrastructure.Data;
 using Insurance.Infrastructure.Data.Repositories;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
 namespace Insurance.Api
 {
     public class Startup
@@ -33,7 +35,11 @@ namespace Insurance.Api
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ISurchargeRepository, SurchargeRepository>();
-            services.AddControllers();
+            services.AddControllers()
+            .AddNewtonsoftJson(options =>
+             {
+               options.SerializerSettings.ContractResolver = new LowerCaseContractResolver();
+             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
