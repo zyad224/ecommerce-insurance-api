@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Reflection;
 using Insurance.Api.Logging;
 using Insurance.Api.Services;
 using Insurance.Api.Services.Interfaces;
@@ -12,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 namespace Insurance.Api
 {
@@ -35,6 +38,25 @@ namespace Insurance.Api
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ISurchargeRepository, SurchargeRepository>();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Insurance API",
+                    Version = "v1",
+                    Description = "An API for Order's Isnurance Management",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Zeyad Abdelwahab",
+                        Email = "zabdelwahab224@gmail.com",
+                    },
+                });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
             services.AddControllers()
             .AddNewtonsoftJson(options =>
              {
@@ -49,6 +71,12 @@ namespace Insurance.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "LockAPI V1");
+            });
 
             app.UseHttpsRedirection();
 
