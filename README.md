@@ -31,4 +31,7 @@
 **API Documentation:**<br />
 1- Swagger.<br />
 
+**Postman Collection:**<br />
+1- https://www.getpostman.com/collections/9e1075da1dc1b06025cc
+
 **This Project is for Educational Purposes. Please feel free to clone it for only this usage.**
