@@ -34,12 +34,15 @@ namespace Insurance.Api.ExceptionHandlerMiddleware
                    (error.GetType() == typeof(InvalidSurchargeException)))
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
 
+                else if (error.GetType() == typeof(AlreadyExistSurchargeException))
+                    response.StatusCode = (int)HttpStatusCode.Conflict;
+
                 else if ((error.GetType() == typeof(KeyNotFoundException)) ||
                   (error.GetType() == typeof(NotFoundSurchargeException)))
                     response.StatusCode = (int)HttpStatusCode.NotFound;
 
                 else if (error.GetType() == typeof(DbUpdateConcurrencyException))
-                     response.StatusCode = (int)HttpStatusCode.Conflict;
+                    response.StatusCode = (int)HttpStatusCode.Conflict;
 
                 else
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
