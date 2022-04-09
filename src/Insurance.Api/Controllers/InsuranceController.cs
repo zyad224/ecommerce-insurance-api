@@ -38,8 +38,8 @@ namespace Insurance.Api.Controllers
             var productTypeDtoList = await _productService.GetProductTypes(productDtoList);
             var insuranceDtoList = productDtoList.Merge(productTypeDtoList);
             var insuranceList = await _insuranceService.CalculateInsurance(insuranceDtoList);
-            var extraInsuranceFees = _insuranceService.ExtraInsuranceFees(insuranceList);
-            var totalInsurance = _insuranceService.TotalInsurance(insuranceList,extraInsuranceFees,orderDtoReq.InsuranceDtoList);
+            var extraInsuranceFees = _insuranceService.ExtraInsuranceFees(insuranceDtoList);
+            var totalInsurance = _insuranceService.TotalInsurance(insuranceList,orderDtoReq.InsuranceDtoList,extraInsuranceFees);
             _mapper.Map<List<Insurance.Domain.Entities.Insurance>, List<InsuranceDto>>(insuranceList, insuranceDtoList);
             var orderDto = new OrderDto { InsuranceDtoList = insuranceDtoList, OrderInsuranceValue = totalInsurance };         
             return Ok(orderDto);
@@ -49,7 +49,8 @@ namespace Insurance.Api.Controllers
         /// The endpoint recieves List of SurchargeDto and save them in the database.
         /// </summary>
         /// /// <response code="201"> Creates a new list of Surcharges in the database</response>
-        /// <response code="400">List of Surcharges submitted is NULL or Empty</response>   
+        /// <response code="400">List of Surcharges submitted is NULL or Empty</response>
+        /// <response code="409">List of Surcharges submitted Already Exists in the System</response> 
         [HttpPost]
         [Route("surcharges")]
         public async Task<ActionResult<List<SurchargeDto>>> UploadSurcharges([FromBody] List<SurchargeDto> surchargeDtoReq)
@@ -58,7 +59,7 @@ namespace Insurance.Api.Controllers
                 return BadRequest("Invalid /surcharges API Endpoint Model");
             var surChargeList = _mapper.Map<List<Insurance.Domain.Entities.Surcharge>>(surchargeDtoReq);
             await _insuranceService.AddSurcharge(surChargeList);
-            return CreatedAtAction("Created", surchargeDtoReq);
+            return CreatedAtAction("UploadSurcharges", surchargeDtoReq);
         }
         /// <summary>
         /// Surcharges endpoint is responsible to update an already existing surcharge.

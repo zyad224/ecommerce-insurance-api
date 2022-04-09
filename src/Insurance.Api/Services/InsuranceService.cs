@@ -17,7 +17,7 @@ namespace Insurance.Api.Services
 
             _unitOfWork = unitOfWork;
         }
-        public async Task<List<Insurance.Domain.Entities.Insurance>> CalculateInsurance(List<InsuranceDto> insuranceDtoList)
+        public async Task<List<Insurance.Domain.Entities.Insurance>> CalculateInsurance(IEnumerable<InsuranceDto> insuranceDtoList)
         {
             if ((insuranceDtoList == null) ||
                 (!insuranceDtoList.Any()) || 
@@ -40,19 +40,19 @@ namespace Insurance.Api.Services
             }
             return insuranceList;       
         }
-        public float ExtraInsuranceFees(IEnumerable<Insurance.Domain.Entities.Insurance> insuranceList)
+        public float ExtraInsuranceFees(IEnumerable<InsuranceDto> insuranceDtoList)
         {
-            if ((insuranceList == null) || (!insuranceList.Any()))
+            if ((insuranceDtoList == null) || (!insuranceDtoList.Any()))
                 throw new InvalidInsuranceException("Invalid ExtraInsuranceFees Parameters");
 
             float extraInsuranceFees = 0;
-            if (insuranceList.Any(i => i.ProductTypeName == ProductTypeEnum.Digitalcameras.GetString()))
+            if (insuranceDtoList.Any(i => i.ProductTypeName == ProductTypeEnum.Digitalcameras.GetString()))
             {
                 extraInsuranceFees += 500;
             }
             return extraInsuranceFees;
         }
-        public float TotalInsurance(IEnumerable<Insurance.Domain.Entities.Insurance> insuranceList, float extraInsuranceFees, List<InsuranceDto> insuranceDtoList)
+        public float TotalInsurance(IEnumerable<Insurance.Domain.Entities.Insurance> insuranceList,IEnumerable<InsuranceDto> insuranceDtoList, float extraInsuranceFees)
         {
             if ((insuranceList == null) ||
                 (!insuranceList.Any()) || 
@@ -76,7 +76,7 @@ namespace Insurance.Api.Services
             totalInsurance += extraInsuranceFees;       
             return totalInsurance;
         }
-        public async Task AddSurcharge(List<Surcharge> surChargeDtoList)
+        public async Task AddSurcharge(IEnumerable<Surcharge> surChargeDtoList)
         {
             if ((surChargeDtoList == null) ||
                 (!surChargeDtoList.Any()) || 
@@ -87,7 +87,7 @@ namespace Insurance.Api.Services
             {
                 var surchargeDb = await _unitOfWork.SurchargeRepo.GetSurchargeByProductTypeId(surcharge.ProductTypeId);
                 if (surchargeDb != null)
-                    throw new InvalidSurchargeException($"Surcharge Already Exists for ProductTypeId = {surchargeDb.ProductTypeId}");
+                    throw new AlreadyExistSurchargeException($"Surcharge Already Exists for One of the ProductTypes Submitted");
                await  _unitOfWork.SurchargeRepo.Add(surcharge);
             }
             await _unitOfWork.Commit();
