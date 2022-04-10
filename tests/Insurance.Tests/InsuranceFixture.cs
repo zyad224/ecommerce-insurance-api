@@ -21,7 +21,6 @@ namespace Insurance.Tests
         public IMapper _mapper { get; private set; }
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDbApiContext _dbApiContext;
-       // private readonly ISurchargeRepository _surchargeRepo;
         public InsuranceFixture()
         {
             _configuration = new ConfigurationBuilder()
@@ -34,7 +33,6 @@ namespace Insurance.Tests
 
             _mapper = configMapper.CreateMapper();
             _dbApiContext = new DbApiContext(options);
-           // _surchargeRepo = new SurchargeRepository(_dbApiContext);
             _unitOfWork = new UnitOfWork(_dbApiContext);
             _productService = new ProductService(_configuration);
             _insuranceService = new InsuranceService(_unitOfWork);
