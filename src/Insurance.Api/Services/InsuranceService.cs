@@ -88,7 +88,7 @@ namespace Insurance.Api.Services
                 var surchargeDb = await _unitOfWork.SurchargeRepo.GetSurchargeByProductTypeId(surcharge.ProductTypeId);
                 if (surchargeDb != null)
                     throw new AlreadyExistSurchargeException($"Surcharge Already Exists for One of the ProductTypes Submitted");
-               await  _unitOfWork.SurchargeRepo.Add(surcharge);
+               await  _unitOfWork.SurchargeRepo.AddSurcharge(surcharge);
             }
             await _unitOfWork.Commit();
         }
@@ -103,7 +103,7 @@ namespace Insurance.Api.Services
                 throw new NotFoundSurchargeException($"Surcharge with ProductTypeId {surChargeDto.ProductTypeId} Not Found");
 
             surCharge.SetSurChargeFees(surChargeDto.SurChargeFees);
-            _unitOfWork.SurchargeRepo.Update(surCharge);
+            _unitOfWork.SurchargeRepo.UpdateSurcharge(surCharge);
             await _unitOfWork.Commit();
         }
     }

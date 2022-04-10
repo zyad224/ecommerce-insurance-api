@@ -24,7 +24,6 @@ namespace Insurance.Api.Services
         {
             if((productsIds == null) || (!productsIds.Any()) || productsIds.Any(p => p == 0))
                 throw new InvalidProductException("Invalid ProductId List");
-
             var result = await _httpClient.GetAsync(string.Format(_configuration["ProductApi:GetProducts"]));
             var productDtoList = JsonConvert.DeserializeObject<IEnumerable<ProductDto>>(result.Content.ReadAsStringAsync().Result);
             var filteredProductDtoList = productDtoList.Where(pdto => productsIds.Any(productsIds => pdto.Id== productsIds)).ToList();
@@ -34,7 +33,6 @@ namespace Insurance.Api.Services
         {
             if ((productDtoList == null) || (!productDtoList.Any()) || productDtoList.Any(pdto => pdto.ProductTypeId == 0))
                 throw new InvalidProductException("Invalid ProductDto List");
-
             var result = await _httpClient.GetAsync(string.Format(_configuration["ProductApi:GetProductTypes"]));
             var productTypeDtoList = JsonConvert.DeserializeObject<IEnumerable<ProductTypeDto>>(result.Content.ReadAsStringAsync().Result);
             var filteredProductTypeDtoList = productTypeDtoList.Where(ptdto => productDtoList.Any(pdto => ptdto.Id == pdto.ProductTypeId)).ToList();
