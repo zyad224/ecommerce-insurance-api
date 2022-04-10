@@ -1,7 +1,6 @@
 ﻿using Insurance.Domain.Entities;
 using Insurance.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 namespace Insurance.Infrastructure.Data.Repositories
 {
@@ -13,7 +12,7 @@ namespace Insurance.Infrastructure.Data.Repositories
         {
             _dbApiContext = dbApiContext;
         }
-        public async Task Add(Surcharge surCharge)
+        public async Task AddSurcharge(Surcharge surCharge)
         {
             await _dbApiContext.Surcharges.AddAsync(surCharge);
         }
@@ -21,13 +20,8 @@ namespace Insurance.Infrastructure.Data.Repositories
         {
             return await _dbApiContext.Surcharges.FirstOrDefaultAsync(s => s.ProductTypeId == productTypeId);
         }
-        public async Task<IEnumerable<Surcharge>> GetAll()
-        {
-            return await _dbApiContext.Surcharges.ToListAsync();
-        }
-        public void Update(Surcharge surCharge)
-        {
-            
+        public void UpdateSurcharge(Surcharge surCharge)
+        {    
             _dbApiContext.Surcharges.Update(surCharge).State = EntityState.Modified;
         }
     }
